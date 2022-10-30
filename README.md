@@ -4,4 +4,4 @@
 
 
 ### tutorial link
-https://www.bezkoder.com/react-spring-boot-crud/#Spring_Boot_React_CRUD_example_Overview
+https://www.bezkoder.com/react-spring-boot-crud/
