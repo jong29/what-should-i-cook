@@ -4,46 +4,54 @@ import TutorialDataService from "../services/tutorial.service";
 export default class AddTutorial extends Component {
   constructor(props) {
     super(props);
-    this.onChangeTitle = this.onChangeTitle.bind(this);
-    this.onChangeDescription = this.onChangeDescription.bind(this);
-    this.saveTutorial = this.saveTutorial.bind(this);
-    this.newTutorial = this.newTutorial.bind(this);
+    this.onChangeName = this.onChangeName.bind(this);
+    this.onChangeIngredients = this.onChangeIngredients.bind(this);
+    this.onChangeLink = this.onChangeLink.bind(this);
+    this.saveDish = this.saveDish.bind(this);
+    this.newDish = this.newDish.bind(this);
 
     this.state = {
       id: null,
-      title: "",
-      description: "", 
-      published: false,
+      name: "",
+      ingredients: [], //change to array
+      link: "",
 
       submitted: false
     };
   }
 
-  onChangeTitle(e) {
+  onChangeName(e) {
     this.setState({
-      title: e.target.value
+      name: e.target.value
     });
   }
 
-  onChangeDescription(e) {
+  onChangeIngredients(e) {
     this.setState({
-      description: e.target.value
+      ingredients: e.target.value.split(',') //change to array
     });
   }
 
-  saveTutorial() {
+  onChangeLink(e) {
+    this.setState({
+      link: e.target.value //change to array
+    });
+  }
+
+  saveDish() {
     var data = {
-      title: this.state.title,
-      description: this.state.description
+      name: this.state.name,
+      ingredients: this.state.ingredients,
+      link: this.state.link
     };
 
     TutorialDataService.create(data)
       .then(response => {
         this.setState({
           id: response.data.id,
-          title: response.data.title,
-          description: response.data.description,
-          published: response.data.published,
+          name: response.data.name,
+          ingredients: response.data.ingredients,
+          link: response.data.link,
 
           submitted: true
         });
@@ -54,12 +62,12 @@ export default class AddTutorial extends Component {
       });
   }
 
-  newTutorial() {
+  newDish() {
     this.setState({
       id: null,
-      title: "",
-      description: "",
-      published: false,
+      name: "",
+      ingredients: [],
+      link: "",
 
       submitted: false
     });
@@ -70,41 +78,54 @@ export default class AddTutorial extends Component {
       <div className="submit-form">
         {this.state.submitted ? (
           <div>
-            <h4>You submitted successfully!</h4>
-            <button className="btn btn-success" onClick={this.newTutorial}>
-              Add
+            <h4>성공적으로 제출되었습니다!</h4>
+            <button className="btn btn-success" onClick={this.newDish}>
+              추가
             </button>
           </div>
         ) : (
           <div>
             <div className="form-group">
-              <label htmlFor="title">Title</label>
+              <label htmlFor="name">요리</label>
               <input
                 type="text"
                 className="form-control"
-                id="title"
+                id="name"
                 required
-                value={this.state.title}
-                onChange={this.onChangeTitle}
-                name="title"
+                value={this.state.name}
+                onChange={this.onChangeName}
+                name="name"
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="description">Description</label>
+              <label htmlFor="ingredients">재료</label>
               <input
                 type="text"
                 className="form-control"
-                id="description"
+                id="ingredients"
                 required
-                value={this.state.description}
-                onChange={this.onChangeDescription}
-                name="description"
+                value={this.state.ingredients}
+                onChange={this.onChangeIngredients}
+                name="ingredients"
               />
             </div>
 
-            <button onClick={this.saveTutorial} className="btn btn-success">
-              Submit
+            <div className="form-group">
+              <label htmlFor="ingredients">링크</label>
+              <input
+                type="text"
+                className="form-control"
+                id="link"
+                required
+                value={this.state.link}
+                onChange={this.onChangeLink}
+                name="link"
+              />
+            </div>
+
+            <button onClick={this.saveDish} className="btn btn-success">
+              제출
             </button>
           </div>
         )}
