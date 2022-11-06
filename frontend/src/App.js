@@ -13,17 +13,17 @@ class App extends Component {
       <div>
         <nav className="navbar navbar-expand navbar-dark bg-dark">
           <a href="/tutorials" className="navbar-brand">
-            오늘 뭐먹지??
+            오늘 뭐 해먹지?
           </a>
           <div className="navbar-nav mr-auto">  
             <li className="nav-item">
               <Link to={"/tutorials"} className="nav-link">
-                Tutorials
+                레시피
               </Link>
             </li>
             <li className="nav-item">
               <Link to={"/add"} className="nav-link">
-                Add
+                추가
               </Link>
             </li>
           </div>

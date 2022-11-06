@@ -5,38 +5,38 @@ import { Link } from "react-router-dom";
 export default class TutorialsList extends Component {
   constructor(props) {
     super(props);
-    this.onChangeSearchTitle = this.onChangeSearchTitle.bind(this);
-    this.retrieveTutorials = this.retrieveTutorials.bind(this);
+    this.onChangeSearchName = this.onChangeSearchName.bind(this);
+    this.retrieveRecipes = this.retrieveRecipes.bind(this);
     this.refreshList = this.refreshList.bind(this);
-    this.setActiveTutorial = this.setActiveTutorial.bind(this);
-    this.removeAllTutorials = this.removeAllTutorials.bind(this);
-    this.searchTitle = this.searchTitle.bind(this);
+    this.setActiveRecipe = this.setActiveRecipe.bind(this);
+    this.removeAllRecipes = this.removeAllRecipes.bind(this);
+    this.searchName = this.searchName.bind(this);
 
     this.state = {
-      tutorials: [],
-      currentTutorial: null,
+      recipes: [],
+      currentRecipe: null,
       currentIndex: -1,
-      searchTitle: ""
+      searchName: ""
     };
   }
 
   componentDidMount() {
-    this.retrieveTutorials();
+    this.retrieveRecipes();
   }
 
-  onChangeSearchTitle(e) {
-    const searchTitle = e.target.value;
+  onChangeSearchName(e) {
+    const searchName = e.target.value;
 
     this.setState({
-      searchTitle: searchTitle
+      searchName: searchName
     });
   }
 
-  retrieveTutorials() {
+  retrieveRecipes() {
     TutorialDataService.getAll()
       .then(response => {
         this.setState({
-          tutorials: response.data
+          recipes: response.data
         });
         console.log(response.data);
       })
@@ -46,21 +46,21 @@ export default class TutorialsList extends Component {
   }
 
   refreshList() {
-    this.retrieveTutorials();
+    this.retrieveRecipes();
     this.setState({
-      currentTutorial: null,
+      currentRecipe: null,
       currentIndex: -1
     });
   }
 
-  setActiveTutorial(tutorial, index) {
+  setActiveRecipe(recipe, index) {
     this.setState({
-      currentTutorial: tutorial,
+      currentRecipe: recipe,
       currentIndex: index
     });
   }
 
-  removeAllTutorials() {
+  removeAllRecipes() {
     TutorialDataService.deleteAll()
       .then(response => {
         console.log(response.data);
@@ -71,11 +71,11 @@ export default class TutorialsList extends Component {
       });
   }
 
-  searchTitle() {
-    TutorialDataService.findByTitle(this.state.searchTitle)
+  searchName() {
+    TutorialDataService.findByName(this.state.searchName)
       .then(response => {
         this.setState({
-          tutorials: response.data
+          recipes: response.data
         });
         console.log(response.data);
       })
@@ -85,7 +85,7 @@ export default class TutorialsList extends Component {
   }
 
   render() {
-    const { searchTitle, tutorials, currentTutorial, currentIndex } = this.state;
+    const { searchName, recipes, currentRecipe, currentIndex } = this.state;
 
     return (
       <div className="list row">
@@ -94,81 +94,81 @@ export default class TutorialsList extends Component {
             <input
               type="text"
               className="form-control"
-              placeholder="Search by title"
-              value={searchTitle}
-              onChange={this.onChangeSearchTitle}
+              placeholder="Search by name"
+              value={searchName}
+              onChange={this.onChangeSearchName}
             />
             <div className="input-group-append">
               <button
                 className="btn btn-outline-secondary"
                 type="button"
-                onClick={this.searchTitle}
+                onClick={this.searchName}
               >
-                Search
+                검색
               </button>
             </div>
           </div>
         </div>
         <div className="col-md-6">
-          <h4>Tutorials List</h4>
+          <h4>레시피 목록</h4>
 
           <ul className="list-group">
-            {tutorials &&
-              tutorials.map((tutorial, index) => (
+            {recipes &&
+              recipes.map((recipe, index) => (
                 <li
                   className={
                     "list-group-item " +
                     (index === currentIndex ? "active" : "")
                   }
-                  onClick={() => this.setActiveTutorial(tutorial, index)}
+                  onClick={() => this.setActiveRecipe(recipe, index)}
                   key={index}
                 >
-                  {tutorial.title}
+                  {recipe.name}
                 </li>
               ))}
           </ul>
 
           <button
             className="m-3 btn btn-sm btn-danger"
-            onClick={this.removeAllTutorials}
+            onClick={this.Recipes}
           >
-            Remove All
+            전체 제거
           </button>
         </div>
         <div className="col-md-6">
-          {currentTutorial ? (
+          {currentRecipe ? (
             <div>
-              <h4>Tutorial</h4>
+              <h4>레시피</h4>
               <div>
                 <label>
-                  <strong>Title:</strong>
+                  <strong>이름:</strong>
                 </label>{" "}
-                {currentTutorial.title}
+                {currentRecipe.name}
               </div>
               <div>
                 <label>
-                  <strong>Description:</strong>
+                  <strong>재료:</strong>
                 </label>{" "}
-                {currentTutorial.description}
+                {currentRecipe.ingredients}
               </div>
               <div>
                 <label>
-                  <strong>Status:</strong>
+                  <strong>링크:</strong>
                 </label>{" "}
-                {currentTutorial.published ? "Published" : "Pending"}
+                {currentRecipe.link}
               </div>
 
               <Link
-                to={"/tutorials/" + currentTutorial.id}
+                to={"/tutorials/" + currentRecipe.id}
                 className="badge badge-warning"
               >
-                Edit
+                수정
               </Link>
             </div>
           ) : (
             <div>
               <br />
-              <p>Please click on a Tutorial...</p>
+              <p>요리를 선택하세요...</p>
             </div>
           )}
         </div>
