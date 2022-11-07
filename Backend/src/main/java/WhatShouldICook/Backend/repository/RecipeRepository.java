@@ -10,4 +10,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     List<Recipe> findByNameContaining(String name);
 
+
+    List<Recipe> findByIngredientsIn(List<String> ingredients);
+
 }

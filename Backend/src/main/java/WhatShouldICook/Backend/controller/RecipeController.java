@@ -49,6 +49,23 @@ public class RecipeController {
         }
     }
 
+    @GetMapping("/recipeByIngredients")
+    public ResponseEntity<List<Recipe>> getRecipesByIngredients(
+        @RequestParam List<String> ingredients) {
+        try {
+            List<Recipe> recipes = new ArrayList<>();
+
+            recipeRepository.findByIngredientsIn(ingredients).forEach(recipes::add);
+
+            if (recipes.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(recipes, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/recipes/{id}")
     public ResponseEntity<Recipe> getRecipeById(@PathVariable("id") long id) {
         Optional<Recipe> recipeData = recipeRepository.findById(id);
