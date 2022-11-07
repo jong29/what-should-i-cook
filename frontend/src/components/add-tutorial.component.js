@@ -28,7 +28,7 @@ export default class AddTutorial extends Component {
 
   onChangeIngredients(e) {
     this.setState({
-      ingredients: e.target.value.split(',') //change to array
+      ingredients: e.target.value.split(',').map(element => element.trim()) //change to array
     });
   }
 
