@@ -5,57 +5,68 @@ import { withRouter } from '../common/with-router';
 class Tutorial extends Component {
   constructor(props) {
     super(props);
-    this.onChangeTitle = this.onChangeTitle.bind(this);
-    this.onChangeDescription = this.onChangeDescription.bind(this);
-    this.getTutorial = this.getTutorial.bind(this);
-    this.updatePublished = this.updatePublished.bind(this);
-    this.updateTutorial = this.updateTutorial.bind(this);
-    this.deleteTutorial = this.deleteTutorial.bind(this);
+    this.onChangeName = this.onChangeName.bind(this);
+    this.onChangeIngredients = this.onChangeIngredients.bind(this);
+    this.onChangeLink = this.onChangeLink.bind(this);
+    this.getRecipe = this.getRecipe.bind(this);
+    this.updateRecipe = this.updateRecipe.bind(this);
+    this.deleteRecipe = this.deleteRecipe.bind(this);
 
     this.state = {
-      currentTutorial: {
+      currentRecipe: {
         id: null,
-        title: "",
-        description: "",
-        published: false
+        name: "",
+        Ingredients: [],
+        Link: ""
       },
       message: ""
     };
   }
 
   componentDidMount() {
-    this.getTutorial(this.props.router.params.id);
+    this.getRecipe(this.props.router.params.id);
   }
 
-  onChangeTitle(e) {
-    const title = e.target.value;
+  onChangeName(e) {
+    const name = e.target.value;
 
     this.setState(function(prevState) {
       return {
-        currentTutorial: {
-          ...prevState.currentTutorial,
-          title: title
+        currentRecipe: {
+          ...prevState.currentRecipe,
+          name: name
         }
       };
     });
   }
 
-  onChangeDescription(e) {
-    const description = e.target.value;
+  onChangeLink(e) {
+    const link = e.target.value;
     
     this.setState(prevState => ({
-      currentTutorial: {
-        ...prevState.currentTutorial,
-        description: description
+      currentRecipe: {
+        ...prevState.currentRecipe,
+        link: link
       }
     }));
   }
 
-  getTutorial(id) {
+  onChangeIngredients(e) {
+    const ingredients = e.target.value;
+    
+    this.setState(prevState => ({
+      currentRecipe: {
+        ...prevState.currentRecipe,
+        ingredients: ingredients.split(',').map(element => element.trim())
+      }
+    }));
+  }
+
+  getRecipe(id) {
     TutorialDataService.get(id)
       .then(response => {
         this.setState({
-          currentTutorial: response.data
+          currentRecipe: response.data
         });
         console.log(response.data);
       })
@@ -64,38 +75,15 @@ class Tutorial extends Component {
       });
   }
 
-  updatePublished(status) {
-    var data = {
-      id: this.state.currentTutorial.id,
-      title: this.state.currentTutorial.title,
-      description: this.state.currentTutorial.description,
-      published: status
-    };
-
-    TutorialDataService.update(this.state.currentTutorial.id, data)
-      .then(response => {
-        this.setState(prevState => ({
-          currentTutorial: {
-            ...prevState.currentTutorial,
-            published: status
-          }
-        }));
-        console.log(response.data);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
-  updateTutorial() {
+  updateRecipe() {
     TutorialDataService.update(
-      this.state.currentTutorial.id,
-      this.state.currentTutorial
+      this.state.currentRecipe.id,
+      this.state.currentRecipe
     )
       .then(response => {
         console.log(response.data);
         this.setState({
-          message: "The tutorial was updated successfully!"
+          message: "레시피가 성공적으로 업데이트 되었습니다!"
         });
       })
       .catch(e => {
@@ -103,8 +91,8 @@ class Tutorial extends Component {
       });
   }
 
-  deleteTutorial() {    
-    TutorialDataService.delete(this.state.currentTutorial.id)
+  deleteRecipe() {    
+    TutorialDataService.delete(this.state.currentRecipe.id)
       .then(response => {
         console.log(response.data);
         this.props.router.navigate('/tutorials');
@@ -115,79 +103,65 @@ class Tutorial extends Component {
   }
 
   render() {
-    const { currentTutorial } = this.state;
+    const { currentRecipe } = this.state;
 
     return (
       <div>
-        {currentTutorial ? (
+        {currentRecipe ? (
           <div className="edit-form">
-            <h4>Tutorial</h4>
+            <h4>레시피</h4>
             <form>
               <div className="form-group">
-                <label htmlFor="title">Title</label>
+                <label htmlFor="name">이름</label>
                 <input
                   type="text"
                   className="form-control"
-                  id="title"
-                  value={currentTutorial.title}
-                  onChange={this.onChangeTitle}
+                  id="name"
+                  value={currentRecipe.name}
+                  onChange={this.onChangeName}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="description">Description</label>
+                <label htmlFor="ingredients">재료</label>
                 <input
                   type="text"
                   className="form-control"
-                  id="description"
-                  value={currentTutorial.description}
-                  onChange={this.onChangeDescription}
+                  id="ingredients"
+                  value={currentRecipe.ingredients}
+                  onChange={this.onChangeIngredients}
                 />
-              </div>
-
-              <div className="form-group">
-                <label>
-                  <strong>Status:</strong>
-                </label>
-                {currentTutorial.published ? "Published" : "Pending"}
+              </div><div className="form-group">
+                <label htmlFor="ingredients">링크</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="link"
+                  value={currentRecipe.link}
+                  onChange={this.onChangeLink}
+                />
               </div>
             </form>
 
-            {currentTutorial.published ? (
-              <button
-                className="badge badge-primary mr-2"
-                onClick={() => this.updatePublished(false)}
-              >
-                UnPublish
-              </button>
-            ) : (
-              <button
-                className="badge badge-primary mr-2"
-                onClick={() => this.updatePublished(true)}
-              >
-                Publish
-              </button>
-            )}
-
             <button
               className="badge badge-danger mr-2"
-              onClick={this.deleteTutorial}
+              onClick={this.deleteRecipe}
             >
-              Delete
+              삭제
             </button>
 
             <button
               type="submit"
               className="badge badge-success"
-              onClick={this.updateTutorial}
+              onClick={this.updateRecipe}
             >
-              Update
+              업데이트
             </button>
             <p>{this.state.message}</p>
           </div>
         ) : (
           <div>
             <br />
-            <p>Please click on a Tutorial...</p>
+            <p>레시피를 선택하세요...</p>
           </div>
         )}
       </div>
