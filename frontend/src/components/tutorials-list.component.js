@@ -191,7 +191,7 @@ export default class TutorialsList extends Component {
                 <label>
                   <strong>재료:</strong>
                 </label>{" "}
-                {currentRecipe.ingredients}
+                {currentRecipe.ingredients.join(', ')}
               </div>
               <div>
                 <label>
