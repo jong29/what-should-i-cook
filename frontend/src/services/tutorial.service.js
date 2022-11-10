@@ -28,6 +28,11 @@ class TutorialDataService {
   findByName(name) {
     return http.get(`/recipes?name=${name}`);
   }
+
+  findByIngredients(ingredients) {
+    return http.get(`/recipes?ingredients=${ingredients}`);
+  }
+  
 }
 
 export default new TutorialDataService();

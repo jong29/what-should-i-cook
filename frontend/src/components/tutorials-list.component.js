@@ -6,17 +6,20 @@ export default class TutorialsList extends Component {
   constructor(props) {
     super(props);
     this.onChangeSearchName = this.onChangeSearchName.bind(this);
+    this.onChangeSearchIngredients = this.onChangeSearchIngredients.bind(this);
     this.retrieveRecipes = this.retrieveRecipes.bind(this);
     this.refreshList = this.refreshList.bind(this);
     this.setActiveRecipe = this.setActiveRecipe.bind(this);
     this.removeAllRecipes = this.removeAllRecipes.bind(this);
     this.searchName = this.searchName.bind(this);
+    this.searchIngredients = this.searchIngredients.bind(this);
 
     this.state = {
       recipes: [],
       currentRecipe: null,
       currentIndex: -1,
-      searchName: ""
+      searchName: "",
+      searchIngredients: ""
     };
   }
 
@@ -29,6 +32,14 @@ export default class TutorialsList extends Component {
 
     this.setState({
       searchName: searchName
+    });
+  }
+
+  onChangeSearchIngredients(e) {
+    const searchIngredients = e.target.value;
+
+    this.setState({
+      searchIngredients: searchIngredients
     });
   }
 
@@ -84,8 +95,21 @@ export default class TutorialsList extends Component {
       });
   }
 
+  searchIngredients() {
+    TutorialDataService.findByIngredients(this.state.searchIngredients)
+      .then(response => {
+        this.setState({
+          recipes: response.data
+        });
+        console.log(response.data);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
   render() {
-    const { searchName, recipes, currentRecipe, currentIndex } = this.state;
+    const { searchName, searchIngredients, recipes, currentRecipe, currentIndex } = this.state;
 
     return (
       <div className="list row">
@@ -103,6 +127,24 @@ export default class TutorialsList extends Component {
                 className="btn btn-outline-secondary"
                 type="button"
                 onClick={this.searchName}
+              >
+                검색
+              </button>
+            </div>
+          </div>
+          <div className="input-group mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search by Ingredient"
+              value={searchIngredients}
+              onChange={this.onChangeSearchIngredients}
+            />
+            <div className="input-group-append">
+              <button
+                className="btn btn-outline-secondary"
+                type="button"
+                onClick={this.searchIngredients}
               >
                 검색
               </button>
