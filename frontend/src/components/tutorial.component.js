@@ -143,7 +143,7 @@ class Tutorial extends Component {
             </form>
 
             <button
-              className="badge badge-danger mr-2"
+              className="badge bg-secondary"
               onClick={this.deleteRecipe}
             >
               삭제
@@ -151,7 +151,7 @@ class Tutorial extends Component {
 
             <button
               type="submit"
-              className="badge badge-success"
+              className="badge bg-secondary"
               onClick={this.updateRecipe}
             >
               업데이트

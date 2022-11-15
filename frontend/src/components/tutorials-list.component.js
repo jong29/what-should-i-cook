@@ -202,7 +202,7 @@ export default class TutorialsList extends Component {
 
               <Link
                 to={"/tutorials/" + currentRecipe.id}
-                className="badge badge-warning"
+                className="btn btn-outline-primary btn-sm"
               >
                 수정
               </Link>
