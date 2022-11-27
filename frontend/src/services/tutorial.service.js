@@ -30,7 +30,7 @@ class TutorialDataService {
   }
 
   findByIngredients(ingredients) {
-    return http.get(`/recipes?ingredients=${ingredients}`);
+    return http.get(`/recipeByIngredients?ingredients=${ingredients}`);
   }
   
 }

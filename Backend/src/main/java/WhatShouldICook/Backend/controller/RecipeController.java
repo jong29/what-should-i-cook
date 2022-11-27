@@ -2,9 +2,14 @@ package WhatShouldICook.Backend.controller;
 
 import WhatShouldICook.Backend.model.Recipe;
 import WhatShouldICook.Backend.repository.RecipeRepository;
+import com.sun.tools.jconsole.JConsoleContext;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +34,7 @@ public class RecipeController {
 
     @GetMapping("/recipes")
     public ResponseEntity<List<Recipe>> getAllRecipes(
-        @RequestParam(required = false) String name) {
+            @RequestParam(required = false) String name) {
         try {
             List<Recipe> recipes = new ArrayList<>();
 
@@ -38,7 +43,6 @@ public class RecipeController {
             } else {
                 recipeRepository.findByNameContaining(name).forEach(recipes::add);
             }
-
             if (recipes.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -51,16 +55,21 @@ public class RecipeController {
 
     @GetMapping("/recipeByIngredients")
     public ResponseEntity<List<Recipe>> getRecipesByIngredients(
-        @RequestParam List<String> ingredients) {
+            @RequestParam List<String> ingredients) {
         try {
-            List<Recipe> recipes = new ArrayList<>();
+            Set<Recipe> recipes = new HashSet<>();
+            List<Recipe> containing = recipeRepository.findByIngredientsIn(ingredients);
+            for (Recipe c : containing) {
+                if (c.getIngredients().containsAll(ingredients)) {
+                    recipes.add(c);
+                }
+            }
+            List<Recipe> returnRecipes = new LinkedList<>(recipes);
 
-            recipeRepository.findByIngredientsIn(ingredients).forEach(recipes::add);
-
-            if (recipes.isEmpty()) {
+            if (returnRecipes.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(recipes, HttpStatus.OK);
+            return new ResponseEntity<>(returnRecipes, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -81,7 +90,7 @@ public class RecipeController {
     public ResponseEntity<Recipe> createRecipe(@RequestBody Recipe recipe) {
         try {
             Recipe _recipe = recipeRepository.save(
-                new Recipe(recipe.getName(), recipe.getIngredients(), recipe.getLink()));
+                    new Recipe(recipe.getName(), recipe.getIngredients(), recipe.getLink()));
             return new ResponseEntity<>(_recipe, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -90,7 +99,7 @@ public class RecipeController {
 
     @PutMapping("/recipes/{id}")
     public ResponseEntity<Recipe> updateRecipe(@PathVariable("id") long id,
-        @RequestBody Recipe tutorial) {
+                                               @RequestBody Recipe tutorial) {
         Optional<Recipe> recipeData = recipeRepository.findById(id);
 
         if (recipeData.isPresent()) {

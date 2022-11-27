@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -15,17 +16,15 @@ import javax.persistence.Table;
 public class Recipe {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "name")
     private String name;
 
     @ElementCollection
     @Column(name = "ingredients")
     private List<String> ingredients = new ArrayList<>();
 
-    @Column(name = "link")
     private String link;
 
     public Recipe(String name, List<String> ingredients, String link) {
@@ -37,6 +36,7 @@ public class Recipe {
     public Recipe() {
 
     }
+
 
     public long getId() {
         return id;
