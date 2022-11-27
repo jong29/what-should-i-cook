@@ -11,7 +11,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <nav className="navbar navbar-expand navbar-dark bg-dark">
+        <nav className="navbar navbar-expand">
           <a href="/tutorials" className="navbar-brand">
             오늘 뭐 해먹지?
           </a>

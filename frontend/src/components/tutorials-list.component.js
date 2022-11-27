@@ -118,7 +118,7 @@ export default class TutorialsList extends Component {
             <input
               type="text"
               className="form-control"
-              placeholder="Search by name"
+              placeholder="요리 이름으로 검색하기"
               value={searchName}
               onChange={this.onChangeSearchName}
             />
@@ -136,7 +136,7 @@ export default class TutorialsList extends Component {
             <input
               type="text"
               className="form-control"
-              placeholder="Search by Ingredient"
+              placeholder="요리 재료로 검색하기"
               value={searchIngredients}
               onChange={this.onChangeSearchIngredients}
             />
@@ -148,6 +148,12 @@ export default class TutorialsList extends Component {
               >
                 검색
               </button>
+            </div>
+            <div className="input-group-toggle">
+              <label className="switch">
+                <input type="checkbox"/>
+                <span class="slider"></span>
+              </label>
             </div>
           </div>
         </div>
