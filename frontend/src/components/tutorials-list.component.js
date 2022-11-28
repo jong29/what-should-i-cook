@@ -14,6 +14,7 @@ export default class TutorialsList extends Component {
     this.removeAllRecipes = this.removeAllRecipes.bind(this);
     this.searchName = this.searchName.bind(this);
     this.searchIngredients = this.searchIngredients.bind(this);
+    this.toggleSearch = this.toggleSearch.bind(this);
 
     this.state = {
       recipes: [],
@@ -109,6 +110,33 @@ export default class TutorialsList extends Component {
       });
   }
 
+  toggleSearch() {
+    var x = document.getElementById("nameBar");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+    var a = document.getElementById("nameButton");
+    if (a.style.display === "none") {
+      a.style.display = "block";
+    } else {
+      a.style.display = "none";
+    }
+    var y = document.getElementById("ingredientBar");
+    if (y.style.display === "none") {
+      y.style.display = "block";
+    } else {
+      y.style.display = "none";
+    }
+    var b = document.getElementById("ingredientButton");
+    if (b.style.display === "none") {
+      b.style.display = "block";
+    } else {
+      b.style.display = "none";
+    }
+  }
+
   render() {
     const { searchName, searchIngredients, recipes, currentRecipe, currentIndex } = this.state;
 
@@ -119,6 +147,7 @@ export default class TutorialsList extends Component {
             <input
               type="text"
               className="form-control"
+              id = "nameBar"
               placeholder="요리 이름으로 검색하기"
               value={searchName}
               onChange={this.onChangeSearchName}
@@ -127,6 +156,7 @@ export default class TutorialsList extends Component {
               <button
                 className="btn btn-outline-secondary"
                 type="button"
+                id = "nameButton"
                 onClick={this.searchName}
               >
                 검색
@@ -137,6 +167,7 @@ export default class TutorialsList extends Component {
             <input
               type="text"
               className="form-control"
+              id = "ingredientBar"
               placeholder="요리 재료로 검색하기"
               value={searchIngredients}
               onChange={this.onChangeSearchIngredients}
@@ -145,6 +176,7 @@ export default class TutorialsList extends Component {
               <button
                 className="btn btn-outline-secondary"
                 type="button"
+                id = "ingredientButton"
                 onClick={this.searchIngredients}
               >
                 검색
@@ -153,7 +185,8 @@ export default class TutorialsList extends Component {
           </div>
           <div className="input-group-toggle">
             <label className="switch">
-              <input type="checkbox"/>
+              <input type="checkbox"
+              onChange={this.toggleSearch}/>
               <span class="slider round"></span>
             </label>
           </div>
