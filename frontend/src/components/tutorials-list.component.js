@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import TutorialDataService from "../services/tutorial.service";
 import { Link } from "react-router-dom";
+import "./tutorials-list.css";
 
 export default class TutorialsList extends Component {
   constructor(props) {
@@ -149,12 +150,12 @@ export default class TutorialsList extends Component {
                 검색
               </button>
             </div>
-            <div className="input-group-toggle">
-              <label className="switch">
-                <input type="checkbox"/>
-                <span class="slider"></span>
-              </label>
-            </div>
+          </div>
+          <div className="input-group-toggle">
+            <label className="switch">
+              <input type="checkbox"/>
+              <span class="slider round"></span>
+            </label>
           </div>
         </div>
         <div className="col-md-6">
