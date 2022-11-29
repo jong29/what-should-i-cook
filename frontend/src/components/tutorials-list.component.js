@@ -7,13 +7,11 @@ export default class TutorialsList extends Component {
   constructor(props) {
     super(props);
     this.onChangeSearchName = this.onChangeSearchName.bind(this);
-    this.onChangeSearchIngredients = this.onChangeSearchIngredients.bind(this);
     this.retrieveRecipes = this.retrieveRecipes.bind(this);
     this.refreshList = this.refreshList.bind(this);
     this.setActiveRecipe = this.setActiveRecipe.bind(this);
     this.removeAllRecipes = this.removeAllRecipes.bind(this);
     this.searchName = this.searchName.bind(this);
-    this.searchIngredients = this.searchIngredients.bind(this);
     this.toggleSearch = this.toggleSearch.bind(this);
 
     this.state = {
@@ -21,7 +19,7 @@ export default class TutorialsList extends Component {
       currentRecipe: null,
       currentIndex: -1,
       searchName: "",
-      searchIngredients: ""
+      searchType: true
     };
   }
 
@@ -85,55 +83,36 @@ export default class TutorialsList extends Component {
   }
 
   searchName() {
-    TutorialDataService.findByName(this.state.searchName)
-      .then(response => {
-        this.setState({
-          recipes: response.data
+    if (this.state.searchType) {
+      TutorialDataService.findByName(this.state.searchName)
+        .then(response => {
+          this.setState({
+            recipes: response.data
+          });
+          console.log(response.data);
+        })
+        .catch(e => {
+          console.log(e);
         });
-        console.log(response.data);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
-  searchIngredients() {
-    TutorialDataService.findByIngredients(this.state.searchIngredients)
-      .then(response => {
-        this.setState({
-          recipes: response.data
+    } else {
+      TutorialDataService.findByIngredients(this.state.searchName)
+        .then(response => {
+          this.setState({
+            recipes: response.data
+          });
+          console.log(response.data);
+        })
+        .catch(e => {
+          console.log(e);
         });
-        console.log(response.data);
-      })
-      .catch(e => {
-        console.log(e);
-      });
+    }
   }
 
   toggleSearch() {
-    var x = document.getElementById("nameBar");
-    if (x.style.display === "none") {
-      x.style.display = "block";
+    if (this.state.searchType) {
+      this.state.searchType = false;
     } else {
-      x.style.display = "none";
-    }
-    var a = document.getElementById("nameButton");
-    if (a.style.display === "none") {
-      a.style.display = "block";
-    } else {
-      a.style.display = "none";
-    }
-    var y = document.getElementById("ingredientBar");
-    if (y.style.display === "none") {
-      y.style.display = "block";
-    } else {
-      y.style.display = "none";
-    }
-    var b = document.getElementById("ingredientButton");
-    if (b.style.display === "none") {
-      b.style.display = "block";
-    } else {
-      b.style.display = "none";
+      this.state.searchType = true;
     }
   }
 
@@ -148,7 +127,7 @@ export default class TutorialsList extends Component {
               type="text"
               className="form-control"
               id = "nameBar"
-              placeholder="요리 이름으로 검색하기"
+              placeholder="검색하기"
               value={searchName}
               onChange={this.onChangeSearchName}
             />
@@ -163,32 +142,14 @@ export default class TutorialsList extends Component {
               </button>
             </div>
           </div>
-          <div className="input-group mb-3">
-            <input
-              type="text"
-              className="form-control"
-              id = "ingredientBar"
-              placeholder="요리 재료로 검색하기"
-              value={searchIngredients}
-              onChange={this.onChangeSearchIngredients}
-            />
-            <div className="input-group-append">
-              <button
-                className="btn btn-outline-secondary"
-                type="button"
-                id = "ingredientButton"
-                onClick={this.searchIngredients}
-              >
-                검색
-              </button>
-            </div>
-          </div>
           <div className="input-group-toggle">
+            <span>요리 </span>
             <label className="switch">
               <input type="checkbox"
               onChange={this.toggleSearch}/>
               <span class="slider round"></span>
             </label>
+            <span> 재료</span>
           </div>
         </div>
         <div className="col-md-6">
